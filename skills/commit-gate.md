@@ -45,5 +45,5 @@ typecheck, and do not propose a commit until the user has signed off on the mess
   before live verification; follows the implementation that [start-work](start-work.md) set up.
 - Keep push as a deliberate, separate action so "committed" never implies "pushed."
 - This is the *real* commit path and never bypasses hooks. The only sanctioned hook-bypass is the
-  disposable, never-pushed WIP checkpoint in [suspend](suspend.md) — which [unsuspend](unsuspend.md)
-  unwinds; don't conflate the two.
+  disposable, never-pushed WIP checkpoint in [suspend-unsuspend](suspend-unsuspend.md); don't conflate
+  the two.
