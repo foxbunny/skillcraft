@@ -26,8 +26,10 @@ Confirm which archetypes the user wants. Default to the lifecycle set for a dev 
 [postmortem](postmortem.md). Layer in the supporting archetypes where the project calls for them:
 [capture-repro](capture-repro.md) for bug-heavy work, [invariant-audit](invariant-audit.md) when the
 project has hard rules a diff can violate, [metric-ledger](metric-ledger.md) when there's a north-star
-number to track, and [session-journal](session-journal.md) + [task-queue](task-queue.md) for durable
-cross-session record-keeping. Add or drop archetypes to fit; the same skeleton extends to `/review`,
+number to track, [session-journal](session-journal.md) + [task-queue](task-queue.md) for durable
+cross-session record-keeping, and [suspend](suspend.md) + [unsuspend](unsuspend.md) for fast
+task-switching via a throwaway WIP checkpoint. Add or drop archetypes to fit; the same skeleton
+extends to `/review`,
 `/verify`, `/deploy`, etc.
 
 Before adopting any pattern, run the **action vs. standard test** (see the README): if the pattern

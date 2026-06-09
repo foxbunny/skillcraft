@@ -169,7 +169,10 @@ relevant ones into every skill you author.**
 - **Cross-reference siblings.** Skills point at each other by command name ("if the server isn't up,
   start it with `/<launcher>`"). The suite is a workflow, not isolated tools.
 - **Respect standing project constraints.** Echo the repo's hard rules (env setup, read-only infra,
-  never bypass hooks, etc.) in `## Notes` so each skill self-enforces.
+  never bypass hooks, etc.) in `## Notes` so each skill self-enforces. The one *sanctioned* exception
+  to hook-bypass is a disposable, never-pushed local checkpoint that will be unwound (see
+  [suspend](skills/suspend.md) / [unsuspend](skills/unsuspend.md)) — a real commit is always gated and
+  never skips hooks.
 - **Load integrations deliberately, with a fallback chain.** When a step needs external tools (issue
   tracker, browser, MCP), instruct the agent to acquire them via its own mechanism first, and give a
   graceful degradation path (integration → browser → ask the user).
@@ -193,6 +196,8 @@ dev repos want some subset.
 | [run-it](skills/run-it.md) | `/up` / `/up-full` launchers: the app or full stack running as a tracked background task. |
 | [invariant-audit](skills/invariant-audit.md) | An `/audit` command: scan the diff against the project's hard rules and block on violations. |
 | [commit-gate](skills/commit-gate.md) | A `/commit` command: a verified change committed only on approval. |
+| [suspend](skills/suspend.md) | A `/suspend` command: park the branch as a throwaway WIP checkpoint to switch tasks. |
+| [unsuspend](skills/unsuspend.md) | An `/unsuspend` command: unwind the WIP checkpoint and restore the working tree. |
 | [metric-ledger](skills/metric-ledger.md) | A `/log-<metric>` command: record a measurement to a tracked ledger and flag regressions. |
 | [session-journal](skills/session-journal.md) | A `/diary` command: append an immutable dated session entry. |
 | [task-queue](skills/task-queue.md) | A `/todo` command: maintain the persistent cross-session backlog. |
