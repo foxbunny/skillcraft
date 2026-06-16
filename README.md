@@ -33,6 +33,37 @@ change. So the meta-skills here describe the **portable body** and tell the auth
 
 ---
 
+## Authoring-time discovery — what makes a recipe, not a definition
+
+This is the single most important distinction in the library. An **off-the-shelf skill definition** is
+a finished file with one project's facts hardcoded — its commands, its merge style, its tracker, its
+paths. Copy it into a different repo and it lies: it references a test command that doesn't exist, a
+fork that isn't there, a changelog the project doesn't keep. A **meta-skill recipe** ships no facts.
+It ships the **portable body** plus a **discovery pass**: instructions for the authoring agent to read
+the target repo, *infer the project's actual conventions from evidence* (history shape, recent merged
+PRs, config, instruction files), **propose them to the user, and bake the confirmed answers into the
+emitted skill.**
+
+The consequence that matters: **discovery runs once, at authoring time — never at every invocation.**
+The resolved conventions become fixed instructions inside the instance, so the running skill already
+knows them and doesn't re-derive or re-ask. Discover → propose → defer → **bake in**, then the skill
+just executes. Two corollaries every archetype here honors:
+
+- **Infer from what's observable, but the user owns the final call.** Inspect the repo to propose a
+  default; never silently apply an inferred convention. The user confirms or overrides, and *that* is
+  what gets written into the instance. (See `/open-pr` discovering squash-vs-merge and PR-description
+  conventions; `/housekeeping` detecting which VCS the project uses.)
+- **Don't bake in what the project doesn't do.** Conditional steps (a changelog backfill, a ticket
+  link, an archive file) are emitted *only* when discovery finds the project actually does them.
+  Absence is a finding too.
+
+So the test for whether something belongs in this library: if you can write it without ever looking at
+a specific repo, it's a recipe; if it already contains repo facts, it's an instance that escaped its
+discovery pass. The archetype carries the *discovery instructions*; the instance carries the *resolved
+answers*.
+
+---
+
 ## The universal model: two primitives
 
 Reusable agent customization collapses into **two primitives**. Decide which one a skill is before
@@ -201,6 +232,10 @@ dev repos want some subset.
 | [session-journal](skills/session-journal.md) | A `/diary` command: append an immutable dated session entry. |
 | [task-queue](skills/task-queue.md) | A `/todo` command: maintain the persistent cross-session backlog. |
 | [postmortem](skills/postmortem.md) | A `/postmortem` command: durable, honest improvements from a finished session. |
+| [open-pr](skills/open-pr.md) | A `/create-pr` command: push the branch and open a PR on sign-off, with merge style / PR conventions / tracker linkage discovered at authoring time. |
+| [repo-housekeeping](skills/repo-housekeeping.md) | A `/housekeeping` command: delete content-merged branches, flag stale ones, archive shipped backlog items — VCS detected at authoring time. |
+| [adversarial-skeptic](skills/adversarial-skeptic.md) | A `/skeptic` command: independent minimal-context subagents that attack a change *or* a decision and end on the refinements that fix it. Judge-only. |
+| [walkthrough](skills/walkthrough.md) | A `/walkthrough` command: explain a change or code in depth — flow, why, before/after, history, trajectory. Explain-only, no verdicts. |
 
 The same skeleton and principles extend to `/review`, `/verify`, `/deploy`, and other commands — only
 the steps change.

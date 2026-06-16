@@ -28,8 +28,16 @@ Confirm which archetypes the user wants. Default to the lifecycle set for a dev 
 project has hard rules a diff can violate, [metric-ledger](metric-ledger.md) when there's a north-star
 number to track, [session-journal](session-journal.md) + [task-queue](task-queue.md) for durable
 cross-session record-keeping, and [suspend-unsuspend](suspend-unsuspend.md) for fast task-switching
-via a throwaway WIP checkpoint. Add or drop archetypes to fit; the same skeleton extends to `/review`,
-`/verify`, `/deploy`, etc.
+via a throwaway WIP checkpoint. For projects that ship work outward, add [open-pr](open-pr.md) (push
+and open a PR on sign-off) and [repo-housekeeping](repo-housekeeping.md) (sweep merged branches); for
+review-heavy work add [adversarial-skeptic](adversarial-skeptic.md) (red-team a change or a decision)
+and [walkthrough](walkthrough.md) (explain a change in depth). Add or drop archetypes to fit; the same
+skeleton extends to `/review`, `/verify`, `/deploy`, etc.
+
+The discovery-heavy archetypes — [open-pr](open-pr.md) and [repo-housekeeping](repo-housekeeping.md)
+especially — are where the **authoring-time discovery** model (see the README) earns its keep: infer
+the merge style, PR conventions, tracker linkage, and VCS from the repo, propose them, and bake the
+*confirmed* answers into the instance so the running skill never re-discovers them.
 
 Before adopting any pattern, run the **action vs. standard test** (see the README): if the pattern
 bundles a *standard* with an *action* (audit an invariant, record a metric, reconcile a queue), the
@@ -47,7 +55,10 @@ this is the union of them:
 | Build / run / dev-server commands + ports + URLs | README, `package.json`, `docker-compose`, `Procfile`, start scripts |
 | Env setup quirks (venv, env vars, secret sourcing) | instruction files, setup scripts, `.tool-versions` |
 | Branch + commit-message conventions | `git log --oneline -20`, existing branches, CONTRIBUTING, commit-lint config |
-| Issue tracker + id format | branch names, commit messages, PR templates, the user |
+| VCS in use + whether deletes are recoverable | repo dir (`.git` / `.jj` / `.hg`), the user |
+| Merge style (squash / merge / rebase) + PR description conventions | history shape (`git log --graph --oneline`), one or two recent merged PRs, host repo settings |
+| PR host CLI + auth account/scope + fork-vs-origin topology | `git remote -v`, `gh`/`glab` presence, the user |
+| Issue tracker + id format (and whether the project tracks at all) | branch names, commit messages, PR templates, the user |
 | Editing-surface rules (fair-game vs. off-limits dirs) | instruction files, code owners, existing rules |
 | Hard constraints / "never do X" (invariants an audit enforces) | instruction files, existing rules, the user |
 | North-star metric + ledger location + regression policy | README, docs, the user |
