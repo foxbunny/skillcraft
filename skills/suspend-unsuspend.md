@@ -15,6 +15,10 @@ Co-located, the contract is unmissable and the pair is emitted as a unit. (Same 
 Read the [README](../README.md) for the skeleton, header-wrapping, and principles. Author both halves
 with [authoring-a-skill-suite](authoring-a-skill-suite.md).
 
+The git commands shown in parentheses below are the **example VCS** — emit the discovered VCS's
+equivalents (see *Facts to discover*); a project on jj/hg has no `--no-verify` or `HEAD~1`, so don't
+carry git's literals across verbatim.
+
 **Top guardrail (both halves): a WIP checkpoint is local and disposable — never push it, never treat
 it as a real commit, and only ever unwind it with a *soft*, WIP-gated reset.** This is the library's
 one *sanctioned* hook-bypass (contrast the real, gated commit path in [commit-gate](commit-gate.md)):
