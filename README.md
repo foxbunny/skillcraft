@@ -216,8 +216,8 @@ relevant ones into every skill you author.**
 
 Start with [`skills/authoring-a-skill-suite.md`](skills/authoring-a-skill-suite.md) — it is the
 entry-point meta-skill that orchestrates the others: identify the target agent, choose archetypes,
-run discovery, and emit concrete skills. The remaining four are the reusable command archetypes; most
-dev repos want some subset.
+run discovery, and emit concrete skills. The remaining thirteen are the reusable command archetypes;
+most dev repos want some subset.
 
 | Meta-skill | Deliverable it teaches an agent to build |
 |---|---|
