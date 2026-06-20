@@ -51,8 +51,12 @@ discovery as what separates a meta-skill recipe from a static skill definition.)
    changelog/ticket entry exists, with the PR-number slot still to be filled.)*
 2. **Sync and push.** Fetch the integration remote, confirm the branch sits on top of the current
    base, and rebase if behind — keeping the change in the project's merge style (one commit for a
-   squash project). Push to the discovered remote (`origin`, or the fork), force-with-lease only when
-   the branch already exists and was amended/rebased.
+   squash project). If the rebase conflicts **only** in a generated dependency lockfile, resolve it
+   deterministically — take the base's lockfile and regenerate via the project's install command,
+   never hand-merge — then continue; for **any source-file conflict, stop and hand back to the user**
+   (don't auto-resolve, `--skip`, or `--abort` on their behalf). Push to the discovered remote
+   (`origin`, or the fork), force-with-lease only when the branch already exists and was
+   amended/rebased.
 3. **Draft the PR, then wait for sign-off.** Title and body in the project's discovered convention
    (sections, linking line, footer policy), base ← head set per the discovered topology. **Show the
    title and body and wait for explicit approval** before the next step.
@@ -61,8 +65,14 @@ discovery as what separates a meta-skill recipe from a static skill definition.)
 5. **Backfill the PR number — only if the project tracks it.** Add the PR reference to the
    changelog/ticket entry, amend the commit, and force-with-lease (the PR's own diff should carry its
    number). Skip this step entirely for projects that don't track.
-6. **Report.** PR URL, mergeable state, and CI rollup — without polling checks to completion unless
-   asked.
+6. **Report — and don't conflate a clean review with a green PR.** Give the PR URL and mergeable
+   state. A passing automated review is not the same as passing CI: **separately confirm the host's CI
+   checks concluded successfully** before reporting done, and flag any check still pending past a sane
+   threshold as *hung, not slow* — treat a newly-added or changed CI step as unverified until observed
+   green in a real run. Don't poll checks to completion unless asked. If the skill runs a review-fix
+   loop, give it two terminal conditions: success after **N consecutive clean passes** (one stochastic
+   pass isn't proof) and a hard **escalation cap of M find-again rounds** — stop and hand back rather
+   than loop forever.
 
 ## Facts to discover before emitting
 
