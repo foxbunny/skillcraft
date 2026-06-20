@@ -61,7 +61,6 @@ this is the union of them:
 | Issue tracker + id format (and whether the project tracks at all) | branch names, commit messages, PR templates, the user |
 | Editing-surface rules (fair-game vs. off-limits dirs) | instruction files, code owners, existing rules |
 | Hard constraints / "never do X" (invariants an audit enforces) | instruction files, existing rules, the user |
-| North-star metric + ledger location + regression policy | README, docs, the user |
 | Durable-record conventions (journal, task queue) + their file paths | `docs/`, existing logs, instruction files |
 | Available integrations (tracker / browser / MCP) | the agent's tool list; ask the user |
 
