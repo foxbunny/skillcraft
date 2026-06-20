@@ -178,7 +178,11 @@ relevant ones into every skill you author.**
   intent, and propose dropping or deferring it instead of building it.
 - **Confirm before irreversible / outward actions.** Anything that commits, pushes, deletes,
   publishes, or mutates shared state is gated behind explicit user sign-off. Present the proposed
-  action (e.g. the commit message) and wait for approval.
+  action (e.g. the commit message) and wait for approval. The one carve-out is a **recoverable**
+  delete the skill records first and can undo (a branch ref whose id it captures before deletion):
+  present the list and proceed without a separate approval, as [repo-housekeeping](skills/repo-housekeeping.md)
+  does for content-merged branches. Anything unrecoverable, or any unmerged/destructive change, still
+  waits for explicit sign-off.
 - **Honesty over optimism.** If a step was skipped, a path couldn't be reached, or a check wasn't
   actually run, **say so** instead of implying it was done. Ground claims in observed output.
 - **Blast-radius thinking.** For any change skill, include a step that maps *everything the change
