@@ -36,6 +36,5 @@ brief note rather than silently dropping it.
 ## Notes
 
 - Cross-reference siblings: reconciled alongside [session-journal](session-journal.md) at session end;
-  fed by regressions from [metric-ledger](metric-ledger.md) and started via the prep/next flow in
-  [start-work](start-work.md).
+  started via the prep/next flow in [start-work](start-work.md).
 - This is a thin maintenance skill — its value is consistency, not complexity. Keep it small.

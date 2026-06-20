@@ -30,8 +30,7 @@ recordings are reproducible; impressions are not.
 
 - Test framework + how to add/run a single new test (so the failing test lands in the real suite).
 - Where repro artifacts are conventionally stored (a `tests/repros/` or fixtures dir).
-- What a *diffable* measurement looks like for this domain (a buffer, a metric, a snapshot) — see
-  [metric-ledger](metric-ledger.md) if the project tracks a north-star number.
+- What a *diffable* measurement looks like for this domain (a buffer, a metric, a snapshot).
 - The session-log convention, if fixes are noted there (see [session-journal](session-journal.md)).
 
 ## Principles that especially apply

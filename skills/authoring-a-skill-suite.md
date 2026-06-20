@@ -25,8 +25,8 @@ Confirm which archetypes the user wants. Default to the lifecycle set for a dev 
 [start-work](start-work.md) → [run-it](run-it.md) → [commit-gate](commit-gate.md) →
 [postmortem](postmortem.md). Layer in the supporting archetypes where the project calls for them:
 [capture-repro](capture-repro.md) for bug-heavy work, [invariant-audit](invariant-audit.md) when the
-project has hard rules a diff can violate, [metric-ledger](metric-ledger.md) when there's a north-star
-number to track, [session-journal](session-journal.md) + [task-queue](task-queue.md) for durable
+project has hard rules a diff can violate, [session-journal](session-journal.md) +
+[task-queue](task-queue.md) for durable
 cross-session record-keeping, and [suspend-unsuspend](suspend-unsuspend.md) for fast task-switching
 via a throwaway WIP checkpoint. For projects that ship work outward, add [open-pr](open-pr.md) (push
 and open a PR on sign-off) and [repo-housekeeping](repo-housekeeping.md) (sweep merged branches); for

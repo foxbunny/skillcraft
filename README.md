@@ -228,7 +228,6 @@ dev repos want some subset.
 | [invariant-audit](skills/invariant-audit.md) | An `/audit` command: scan the diff against the project's hard rules and block on violations. |
 | [commit-gate](skills/commit-gate.md) | A `/commit` command: a verified change committed only on approval. |
 | [suspend-unsuspend](skills/suspend-unsuspend.md) | Paired `/suspend` · `/unsuspend` commands: park the branch as a throwaway WIP checkpoint to switch tasks, then unwind it to restore the working tree. |
-| [metric-ledger](skills/metric-ledger.md) | A `/log-<metric>` command: record a measurement to a tracked ledger and flag regressions. |
 | [session-journal](skills/session-journal.md) | A `/diary` command: append an immutable dated session entry. |
 | [task-queue](skills/task-queue.md) | A `/todo` command: maintain the persistent cross-session backlog. |
 | [postmortem](skills/postmortem.md) | A `/postmortem` command: durable, honest improvements from a finished session. |
