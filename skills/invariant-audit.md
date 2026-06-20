@@ -23,7 +23,8 @@ correct-looking but wrongly-ordered concurrency handoff).
 1. **Identify the changed surface** that the invariant governs — the files/functions on the audited
    path (the realtime callback, the logging sites, the data layer, the render path).
 2. **Scan for the forbidden patterns** with a concrete, copy-pasteable grep, then **read** each hit in
-   context. List the patterns explicitly so the skill is self-contained.
+   context. Derive the grep patterns *from* the standing-context rule and point back to it — list them
+   for greppability, not as a second canonical copy of the rule that will drift from it.
 3. **For each hit on the governed path, report `file:line` + the lighter-weight alternative** the
    project prefers (pre-allocated pool instead of `new`, the repository API instead of a raw query,
    the structured logger instead of string interpolation).
