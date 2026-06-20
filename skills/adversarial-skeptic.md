@@ -54,10 +54,16 @@ whether something works. If genuinely ambiguous, state your one-line read of the
    where it has them. Charge each: *assume this code is wrong and prove it; every claim needs a
    `file:line`, the exact triggering input/sequence, and the wrong outcome — a reproduction, not a
    worry. Tier findings* **PROVEN / LIKELY / QUESTION**, *add a one-line fix direction to each, and
-   if you can't break it say so and name the strongest thing you couldn't rule out.*
+   if you can't break it say so and name the strongest thing you couldn't rule out.* When you spawn
+   these as defined subagents, **pin each one's model in its definition** so dispatch can't silently
+   downgrade to a cheaper default — an underpowered skeptic misses the subtle breaks that justify the
+   pass.
 4. **Verify, then report.** The brief was thin, so **you** are the validation layer: check each
-   surviving finding against the real code and upstream contract, kill the ones already gated (mark
-   them false positives — expect a meaningful rate), and forward only survivors. Report: **Verdict**
+   surviving finding against the real code and upstream contract and give it a tagged verdict with a
+   one-line citation of the rule or code that settles it; kill the ones already gated (mark them false
+   positives — **expect a high rate, commonly 30–50%**). Process every candidate to a verdict — "the
+   rest look minor" is a process miss, not a judgement — and never fold a real hole into a blanket
+   "minor" dismissal. Forward only survivors. Report: **Verdict**
    (holds up / holds up with caveats / does not meet the goal), **Confirmed holes** (ordered by
    severity, each with anchor, trigger, wrong outcome, tier, fix direction), **Dismissed** (and why),
    and the **strongest unrefuted doubt** if nothing was proven. "I tried to break it and couldn't" is

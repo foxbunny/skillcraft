@@ -38,8 +38,20 @@ typecheck, and do not propose a commit until the user has signed off on the mess
    For a **non-trivial logic diff, dispatch the project's own review/detector agents** (or a small
    fan-out of adversarial reviewers — see [adversarial-skeptic](adversarial-skeptic.md)) over the
    staged diff before proposing the message — your own read has blind spots a green suite won't cover.
-   Each agent sees only a diff slice, so **you verify every finding against the surrounding code**:
-   mark false positives with the reason, fix the real ones, re-run the gates. A genuinely trivial diff
+   **Author each detector as a read-only, single-concern agent that sees only the diff slice** — never
+   your transcript or the wider refactor — with its reviewing model **pinned in the agent's own
+   definition** so dispatch can't silently downgrade to a cheaper default. Have it emit findings as a
+   machine-parseable list (`file:line`, verbatim quote, one-line why, one-line minimal fix) with no
+   prose, charge it to *flag every candidate and let the parent verify*, and require it to **return an
+   explicit empty result rather than narrating "looks fine."** Pair the structured per-concern
+   detectors with one free-form "catch what the others miss" pass whose categories are deliberately
+   not enumerated.
+   Each agent sees only a diff slice, so **you are the validation layer**: give every candidate its
+   own verdict + a one-line citation of the rule or upstream code that settles it, and never act on an
+   untagged finding. **Expect a high false-positive rate (commonly 30–50%)** — "apply just to be safe"
+   is how a green review *introduces* a regression. Process every candidate to a verdict ("the rest
+   look minor" is a process miss, not a judgement), never bundle a real fix into a collective "these
+   look like minor style" dismissal, fix the real ones, and re-run the gates. A genuinely trivial diff
    may skip the dispatch — say so rather than implying it ran.
 6. **Propose a commit message** in the repo's convention, then get **explicit sign-off** before
    committing. Don't push.
@@ -63,7 +75,8 @@ typecheck, and do not propose a commit until the user has signed off on the mess
   skipped; if the detector pass was skipped as trivial, say so rather than implying it ran.
 - **Ground quality flags in the repo's own rules, and keep them flags** — the step-5 scan recommends
   and the user decides; only red gates (failing tests/lint/typecheck) block the commit. Verify every
-  subagent finding before reacting — expect a false-positive rate.
+  subagent finding before reacting — expect a high (commonly 30–50%) false-positive rate, give each
+  finding its own tagged verdict, and never bundle a real fix into a blanket "minor" dismissal.
 - **Respect standing project constraints** — never bypass hooks; echo the repo's hard rules in `## Notes`.
 
 ## Notes
