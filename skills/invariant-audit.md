@@ -54,5 +54,5 @@ correct-looking but wrongly-ordered concurrency handoff).
 
 - Cross-reference siblings: run after implementation and before [commit-gate](commit-gate.md); the
   commit gate should refuse if a required audit hasn't passed.
-- One audit skill per distinct invariant domain. Resist a mega-audit that checks unrelated rules.
+- One audit skill per distinct invariant domain. Resist an oversized audit that checks unrelated rules.
 - The invariants live in standing context — when they change, update the rule, and the audit stays thin.

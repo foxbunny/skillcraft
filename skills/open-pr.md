@@ -13,7 +13,7 @@ with [authoring-a-skill-suite](authoring-a-skill-suite.md).
 **Top guardrail: a PR is public — never create it until the user has approved the title and body.**
 Prepare everything, show it, and create only on a clear yes.
 
-## Authoring-time discovery is the whole point
+## Authoring-time discovery is the point
 
 Off-the-shelf PR commands hardcode one project's answers: squash vs merge, the commit-message shape,
 what a PR description must contain, whether to push to a fork or to origin, which tracker links to
@@ -30,7 +30,7 @@ guessing:
 - **PR/MR description conventions** — open one or two recently merged PRs and read their structure:
   required sections, a checklist, a `Closes #123` linking line, screenshots-required, whether a
   generated-by footer is wanted or unwanted.
-- **Target + remote topology** — the base branch, branch-naming rules, and whether contributions go
+- **Target + remote setup** — the base branch, branch-naming rules, and whether contributions go
   through a **fork** (push to `origin`, PR `upstream:base ← fork:branch`) or **directly to origin**.
 - **Tracker & changelog linkage — and whether the project tracks at all.** Some projects backfill the
   PR number into a changelog entry or update a ticket; many do neither. Discover which, and only
@@ -58,7 +58,7 @@ discovery as what separates a meta-skill recipe from a static skill definition.)
    (`origin`, or the fork), force-with-lease only when the branch already exists and was
    amended/rebased.
 3. **Draft the PR, then wait for sign-off.** Title and body in the project's discovered convention
-   (sections, linking line, footer policy), base ← head set per the discovered topology. **Show the
+   (sections, linking line, footer policy), base ← head set per the discovered setup. **Show the
    title and body and wait for explicit approval** before the next step.
 4. **Create.** Run the host's create command with the approved title/body and the resolved base/head;
    capture the PR number and URL.
@@ -70,14 +70,14 @@ discovery as what separates a meta-skill recipe from a static skill definition.)
    checks concluded successfully** before reporting done, and flag any check still pending past a sane
    threshold as *hung, not slow* — treat a newly-added or changed CI step as unverified until observed
    green in a real run. Don't poll checks to completion unless asked. If the skill runs a review-fix
-   loop, give it two terminal conditions: success after **N consecutive clean passes** (one stochastic
-   pass isn't proof) and a hard **escalation cap of M find-again rounds** — stop and hand back rather
+   loop, give it two stopping conditions: success after **N consecutive clean passes** (one stochastic
+   pass isn't proof) and a hard **limit of M find-again rounds** — stop and hand back rather
    than loop forever.
 
 ## Facts to discover before emitting
 
 - All of the **authoring-time discovery** list above: merge style, commit-message format, PR
-  description conventions, base branch + naming, fork-vs-origin topology, and tracker/changelog
+  description conventions, base branch + naming, fork-vs-origin setup, and tracker/changelog
   linkage (including *whether the project tracks at all*).
 - The PR host and its CLI/API (`gh`, `glab`, etc.), the auth account and required scope, and the
   absolute path/invocation if PATH is unreliable.

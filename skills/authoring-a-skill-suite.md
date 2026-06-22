@@ -4,7 +4,7 @@
 library into a concrete, project-specific skill suite for whichever target agent the project uses. It
 produces *skill files*, not application code.
 
-Read the [README](../README.md) first for the two primitives, the activation taxonomy, the portable
+Read the [README](../README.md) first for the two primitives, the activation modes, the portable
 skeleton, the agent-mapping table, and the universal design principles. This document is the
 *procedure* that consumes all of those.
 
@@ -30,12 +30,12 @@ project has hard rules a diff can violate, [session-journal](session-journal.md)
 cross-session record-keeping, and [suspend-unsuspend](suspend-unsuspend.md) for fast task-switching
 via a throwaway WIP checkpoint. For projects that ship work outward, add [open-pr](open-pr.md) (push
 and open a PR on sign-off) and [repo-housekeeping](repo-housekeeping.md) (sweep merged branches); for
-review-heavy work add [adversarial-skeptic](adversarial-skeptic.md) (red-team a change or a decision)
+review-heavy work add [adversarial-skeptic](adversarial-skeptic.md) (adversarially test a change or a decision)
 and [walkthrough](walkthrough.md) (explain a change in depth). Add or drop archetypes to fit; the same
 skeleton extends to `/review`, `/verify`, `/deploy`, etc.
 
 The discovery-heavy archetypes — [open-pr](open-pr.md) and [repo-housekeeping](repo-housekeeping.md)
-especially — are where the **authoring-time discovery** model (see the README) earns its keep: infer
+especially — are where the **authoring-time discovery** model (see the README) does the most work: infer
 the merge style, PR conventions, tracker linkage, and VCS from the repo, propose them, and bake the
 *confirmed* answers into the instance so the running skill never re-discovers them.
 
@@ -46,7 +46,7 @@ this library only authors the skills.
 
 ## 3. Run the discovery pass
 
-Fill a fact sheet from the repo — **don't guess**. Each archetype lists the specific facts it needs;
+Fill a list of facts from the repo — **don't guess**. Each archetype lists the specific facts it needs;
 this is the union of them:
 
 | Fact needed | Where to find it |
@@ -57,7 +57,7 @@ this is the union of them:
 | Branch + commit-message conventions | `git log --oneline -20`, existing branches, CONTRIBUTING, commit-lint config |
 | VCS in use + whether deletes are recoverable | repo dir (`.git` / `.jj` / `.hg`), the user |
 | Merge style (squash / merge / rebase) + PR description conventions | history shape (`git log --graph --oneline`), one or two recent merged PRs, host repo settings |
-| PR host CLI + auth account/scope + fork-vs-origin topology | `git remote -v`, `gh`/`glab` presence, the user |
+| PR host CLI + auth account/scope + fork-vs-origin setup | `git remote -v`, `gh`/`glab` presence, the user |
 | Issue tracker + id format (and whether the project tracks at all) | branch names, commit messages, PR templates, the user |
 | Editing-surface rules (fair-game vs. off-limits dirs) | instruction files, code owners, existing rules |
 | Hard constraints / "never do X" (invariants an audit enforces) | instruction files, existing rules, the user |
@@ -100,5 +100,5 @@ what that implies), and suggest the user try one.
 - Re-derive commands, paths, conventions, constraints, and header syntax **per project and per agent**.
   Never carry another repo's or another agent's specifics across.
 - Prefer asking over guessing — a lying skill is worse than no skill.
-- Keep each skill focused on one job; let the suite compose. Resist the mega-skill.
+- Keep each skill focused on one job; let the suite compose. Resist the oversized skill.
 - Skills are cheap to iterate, especially in local-only dirs — refine wording after the first real run.

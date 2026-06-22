@@ -3,7 +3,7 @@
 **Archetype for a `/skeptic` command.** Use this to author a skill whose deliverable is **an
 adversarial pressure-test of either a change or a decision, ending on the refinements that would fix
 what it found**. The boundary: it **judges; it does not act** — no edits, no commits, and it does not
-make the decision for the user. It is the red-team complement to a balanced review, not a replacement
+make the decision for the user. It is the adversarial complement to a balanced review, not a replacement
 for one.
 
 Read the [README](../README.md) for the skeleton, header-wrapping, and principles. Author this skill
@@ -21,7 +21,7 @@ the user. One reviewer who shares your context shares your blind spots; a fresh 
 facts and charged to *break* the thing finds what confirmation bias hid. The skill is adversarial in
 **both** modes — it attacks the prevailing view, it does not balance or advocate — but always ends on
 **refinements** (the smallest change that neutralises each flaw), because the point is a sharper
-artifact or a better-made decision, not a body count.
+artifact or a better-made decision, not a tally of flaws.
 
 It has two modes, dispatched by what it is pointed at:
 
@@ -30,7 +30,7 @@ It has two modes, dispatched by what it is pointed at:
 | **Break it** | code — a diff, a path, a PR, the change under discussion | Assume the code is wrong / fails its goal and **prove it** with a concrete reproduction. |
 | **Tear it down** | one or more decisions/options being weighed | **One skeptic per option**, each assuming its option is the wrong call; refine every option to its strongest form, then break any tie with an impartial evaluator. |
 
-The tell for *tear it down* is that the conversation is **weighing alternatives**, not checking
+The sign for *tear it down* is that the conversation is **weighing alternatives**, not checking
 whether something works. If genuinely ambiguous, state your one-line read of the mode and proceed.
 
 ## Generalized steps (the reusable body)
@@ -38,10 +38,10 @@ whether something works. If genuinely ambiguous, state your one-line read of the
 ### Break it (code)
 1. **Resolve the target and the goal.** Target: dispatch on the argument — none → the change under
    discussion (branch-vs-base diff + uncommitted); a path → that code; a PR ref → its diff; a quoted
-   focus → that slice. Goal (the yardstick): recover it in order — what the user stated as
+   focus → that slice. Goal (the standard to judge against): recover it in order — what the user stated as
    acceptance criteria, then the linked ticket, then the intent visible in code/commits/tests. The
    strongest finding is often "the ticket asked X; this does Y." If unrecoverable, state a one-line
-   assumption and proceed — a wrong yardstick beats none.
+   assumption and proceed — a wrong standard beats none.
 2. **Build the minimal brief.** Self-contained, no transcript: the goal, the code with real anchors
    (`file:line`), and the **minimum surrounding contract** it depends on but doesn't show (the
    invariant, the input shape, the caller's expectation — one or two lines each). That contract is
@@ -49,7 +49,7 @@ whether something works. If genuinely ambiguous, state your one-line read of the
    repo rules so it judges against the project's conventions. **Exclude** our reasoning and what we
    ruled out.
 3. **Spawn the skeptic(s).** Default to one focused pass; for a broad or high-stakes change fan out
-   2–4 in parallel, each a **distinct lens** (correctness/logic, goal-met?, invariants/contracts,
+   2–4 in parallel, each a **distinct angle** (correctness/logic, goal-met?, invariants/contracts,
    failure modes) so they don't all find the same thing. Prefer the repo's own adversarial agents
    where it has them. Charge each: *assume this code is wrong and prove it; every claim needs a
    `file:line`, the exact triggering input/sequence, and the wrong outcome — a reproduction, not a
@@ -80,7 +80,7 @@ whether something works. If genuinely ambiguous, state your one-line read of the
    own option on the merits, not told which way we tilt.
 3. **Fan out — one skeptic per option, in parallel.** Each attacks only its own option (it sees the
    others only as the bar to clear). Charge each: *assume this option is the wrong call and prove it
-   — the scenario that breaks it, the cost the discussion isn't pricing in, the load-bearing
+   — the scenario that breaks it, the cost the discussion isn't pricing in, the critical
    assumption that sinks it if false, and the alternative that beats it on which criterion. Tier each
    objection, add the* **refinement** *that would neutralise it (or "fatal — no cheap fix").*
 4. **Refine every option, validate, compare.** Drop objections built on false premises or conditions
@@ -101,7 +101,7 @@ whether something works. If genuinely ambiguous, state your one-line read of the
 
 - How to get the change under review: the VCS diff commands (branch-vs-base and uncommitted) and how
   to fetch a PR's diff (`gh`/`glab`/host CLI or API), normalised to the project's host.
-- The **yardstick source**: the issue tracker and id format used to recover a change's intended goal
+- The **goal source**: the issue tracker and id format used to recover a change's intended goal
   (cross-reference [start-work](start-work.md)'s ticket fetch), and the fallback when there's no
   ticket.
 - Whether the repo ships its **own adversarial agents or review-checklist rules** worth preferring

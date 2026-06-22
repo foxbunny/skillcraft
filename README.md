@@ -24,7 +24,7 @@ time. Never carry one repo's or one agent's specifics into another.
 Different agents call reusable-customization artifacts different things — Claude Code "Agent Skills",
 Cursor "Rules & Commands", Copilot "instructions & prompt files", Windsurf "Rules & Workflows",
 Gemini CLI "custom commands", Codex "AGENTS.md & prompts", Roo Code "modes". They are one idea with a
-shared structure. A meta-skill captures that shared structure once, so an agent can project it onto
+shared structure. A meta-skill captures that shared structure once, so an agent can map it onto
 whichever surface the current project targets.
 
 The body prose of a skill is reusable verbatim across agents; only the header and argument syntax
@@ -35,7 +35,7 @@ change. So the meta-skills here describe the **portable body** and tell the auth
 
 ## Authoring-time discovery — what makes a recipe, not a definition
 
-This is the single most important distinction in the library. An **off-the-shelf skill definition** is
+This is the most important distinction in the library. An **off-the-shelf skill definition** is
 a finished file with one project's facts hardcoded — its commands, its merge style, its tracker, its
 paths. Copy it into a different repo and it lies: it references a test command that doesn't exist, a
 fork that isn't there, a changelog the project doesn't keep. A **meta-skill recipe** ships no facts.
@@ -44,7 +44,7 @@ the target repo, *infer the project's actual conventions from evidence* (history
 PRs, config, instruction files), **propose them to the user, and bake the confirmed answers into the
 emitted skill.**
 
-The consequence that matters: **discovery runs once, at authoring time — never at every invocation.**
+The consequence: **discovery runs once, at authoring time — never at every invocation.**
 The resolved conventions become fixed instructions inside the instance, so the running skill already
 knows them and doesn't re-derive or re-ask. Discover → propose → defer → **bake in**, then the skill
 just executes. Two corollaries every archetype here honors:
@@ -66,7 +66,7 @@ answers*.
 
 ## The universal model: two primitives
 
-Reusable agent customization collapses into **two primitives**. Decide which one a skill is before
+Reusable agent customization reduces to **two primitives**. Decide which one a skill is before
 writing it — they activate differently:
 
 | Primitive | What it is | When it loads |
@@ -80,15 +80,15 @@ constraints* live, which the commands then reference. A good suite uses both: th
 for invariants, fat on-demand commands for workflows.
 
 **Action vs. standard — the test to run before authoring anything.** Many useful patterns bundle a
-*standard* with an *action over it*: audit an invariant, record a north-star metric, reconcile a
+*standard* with an *action over it*: audit an invariant, record a top-priority metric, reconcile a
 backlog, append an immutable log. The **action is the skill** (this library); the **standard it
 enforces is a rule** that belongs in standing context. Keep the standard in one place and have the
 skill *reference* it — never re-author the rule inside the skill. So "no allocation on the audio
-thread" is a rule; the `/audit` that checks the diff against it is a skill. "Latency is the north
-star and regressions block release" is a rule; the `/latency-log` that records one measurement is a
+thread" is a rule; the `/audit` that checks the diff against it is a skill. "Latency is the top
+priority and regressions block release" is a rule; the `/latency-log` that records one measurement is a
 skill. This library only covers the skills.
 
-### The activation taxonomy
+### The activation modes
 
 Every agent expresses some subset of four activation modes. Pick one per skill:
 
@@ -97,7 +97,7 @@ Every agent expresses some subset of four activation modes. Pick one per skill:
 3. **Model-decided** — the agent reads the skill's *description* and chooses whether to load it.
 4. **Manual** — only when the user explicitly invokes it (`/name` or `@name`).
 
-This is why **the `description` field is the single most important line you write**: in modes 3 and 4
+This is why **the `description` field is the most important line you write**: in modes 3 and 4
 it is both the trigger signal and the menu text. Lead with the outcome and enumerate concrete trigger
 phrases.
 
@@ -195,7 +195,7 @@ relevant ones into every skill you author.**
   estimate. If only an estimate is available, **label it as such** — an unlabelled guess pollutes the
   record.
 - **Append-only history.** Skills that maintain logs, journals, or ledgers **never rewrite past
-  entries** — they add new ones and reconcile forward. History is immutable; the trail is the value.
+  entries** — they add new ones and reconcile in new entries. History is immutable; the trail is the value.
 - **Right-home mapping for durable fixes.** When a skill emits guidance/rules, map each fix to the
   **lightest durable mechanism** that removes the friction, and to where it belongs: this skill's body
   / a standing-context rule (`CLAUDE.md`/`AGENTS.md`) / a script / a settings hook / personal memory /
@@ -204,7 +204,7 @@ relevant ones into every skill you author.**
 - **Cross-reference siblings.** Skills point at each other by command name ("if the server isn't up,
   start it with `/<launcher>`"). The suite is a workflow, not isolated tools.
 - **Respect standing project constraints.** Echo the repo's hard rules (env setup, read-only infra,
-  never bypass hooks, etc.) in `## Notes` so each skill self-enforces. The one *sanctioned* exception
+  never bypass hooks, etc.) in `## Notes` so each skill self-enforces. The one *permitted* exception
   to hook-bypass is a disposable, never-pushed local checkpoint that will be unwound (see
   [suspend-unsuspend](skills/suspend-unsuspend.md)) — a real commit is always gated and never skips
   hooks.
@@ -238,7 +238,7 @@ most dev repos want some subset.
 | [open-pr](skills/open-pr.md) | A `/create-pr` command: push the branch and open a PR on sign-off, with merge style / PR conventions / tracker linkage discovered at authoring time. |
 | [repo-housekeeping](skills/repo-housekeeping.md) | A `/housekeeping` command: delete content-merged branches, flag stale ones, archive shipped backlog items — VCS detected at authoring time. |
 | [adversarial-skeptic](skills/adversarial-skeptic.md) | A `/skeptic` command: independent minimal-context subagents that attack a change *or* a decision and end on the refinements that fix it. Judge-only. |
-| [walkthrough](skills/walkthrough.md) | A `/walkthrough` command: explain a change or code in depth — flow, why, before/after, history, trajectory. Explain-only, no verdicts. |
+| [walkthrough](skills/walkthrough.md) | A `/walkthrough` command: explain a change or code in depth — flow, why, before/after, history, direction. Explain-only, no verdicts. |
 
 The same skeleton and principles extend to `/review`, `/verify`, `/deploy`, and other commands — only
 the steps change.
@@ -252,7 +252,7 @@ the steps change.
   another agent's specifics across.
 - A skill that lies (claims a check ran when it didn't, or hard-codes a command that doesn't exist) is
   worse than no skill. Prefer asking over guessing.
-- Keep each skill focused on one job; let the suite compose. Resist a mega-skill — and resist Roo's
+- Keep each skill focused on one job; let the suite compose. Resist an oversized skill — and resist Roo's
   temptation to over-scope a "mode" when a plain command will do.
 - Skills are cheap to iterate, especially where they live in local-only dirs — refine wording after the
   first real run.

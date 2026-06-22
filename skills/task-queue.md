@@ -1,7 +1,7 @@
 # Meta-skill: "task queue" / maintain the persistent backlog
 
 **Archetype for a `/todo` command.** Use this to author a skill whose deliverable is **a reconciled,
-persistent cross-session task queue** — explicitly distinct from the agent's *ephemeral in-session
+persistent cross-session task queue** — explicitly distinct from the agent's *temporary in-session
 task list*. The boundary: it maintains the durable backlog file; it doesn't do the work.
 
 **Skill vs. rule boundary:** *where the queue lives and its format* (a tracked `docs/TODO.md` with a
@@ -25,13 +25,13 @@ brief note rather than silently dropping it.
 ## Facts to discover before emitting
 
 - The queue file's location and format (checkbox groups, a `Now` section, slice/area grouping).
-- How it relates to any issue tracker (is this the source of truth, or a local mirror?).
+- How it relates to any issue tracker (is this the primary record, or a local mirror?).
 - The distinction the project draws between this durable queue and the in-session task list.
 
 ## Principles that especially apply
 
 - **Honesty over optimism** — don't silently drop deferred work; mark it.
-- **Append-only spirit** — reconcile forward; preserve the trail of what changed.
+- **Append-only** — preserve the trail of what changed, never rewrite it.
 
 ## Notes
 

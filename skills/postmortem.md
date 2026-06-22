@@ -1,7 +1,7 @@
 # Meta-skill: "learn from it" / postmortem
 
 **Archetype for a `/postmortem` command.** Use this to author a skill whose deliverable is **durable,
-honest improvements distilled from a finished session**. The boundary: it proposes and applies
+honest improvements drawn from a finished session**. The boundary: it proposes and applies
 *guidance/rule* changes; it does not commit them into open work.
 
 Read the [README](../README.md) for the skeleton, header-wrapping, and principles. Author this skill
@@ -10,9 +10,9 @@ with [authoring-a-skill-suite](authoring-a-skill-suite.md).
 **Top guardrail: don't manufacture findings or over-claim fault.** Distinguish real corrections from
 plain directives; ground every claim in a verifiable anchor.
 
-**Run two lenses, not one.** *Hardening* — what went wrong and how to prevent it (corrections, bugs,
+**Check from two angles, not one.** *Hardening* — what went wrong and how to prevent it (corrections, bugs,
 skipped steps). *Streamlining* — what was **correct but tedious**: a multi-step manual sequence you'd
-repeat next time that a new or upgraded skill could do deterministically. The streamlining lens has
+repeat next time that a new or upgraded skill could do deterministically. The streamlining angle has
 nothing to do with mistakes — **a clean session with no bugs can still surface a valuable skill**, so
 don't skip it just because nothing broke.
 
@@ -27,7 +27,7 @@ don't skip it just because nothing broke.
    user corrections / "no, actually…"; bugs you introduced or rework done twice; skipped or rushed
    steps; failed or retried commands and setup snags; permission prompts that recur for safe commands;
    context that had to be rediscovered; slow/uncertain decisions a standing rule could settle; and —
-   the streamlining lens — any repetitive ordered manual sequence (≈3+ steps) you'd repeat on the next
+   the streamlining angle — any repetitive ordered manual sequence (≈3+ steps) you'd repeat on the next
    task, *even if it went perfectly*.
 3. **Diagnose root causes** and keep only the patterns likely to **recur** — drop one-offs.
 4. **Propose each fix mapped to its right home — the lightest durable mechanism that removes the

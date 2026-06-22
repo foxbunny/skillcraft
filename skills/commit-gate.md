@@ -34,14 +34,14 @@ typecheck, and do not propose a commit until the user has signed off on the mess
      the real state. Run a new test alone *and* beside a sibling that imports the same real modules.
    - **Silent error-swallowing** — an added empty `catch` / `except …: pass` that drops an error
      without logging, especially when a sibling path in the same diff *does* log (the inconsistency is
-     the tell).
+     the giveaway).
    For a **non-trivial logic diff, dispatch the project's own review/detector agents** (or a small
    fan-out of adversarial reviewers — see [adversarial-skeptic](adversarial-skeptic.md)) over the
    staged diff before proposing the message — your own read has blind spots a green suite won't cover.
-   **Author each detector as a read-only, single-concern agent that sees only the diff slice** — never
+   **Author each detector as a read-only, single-purpose agent that sees only the diff slice** — never
    your transcript or the wider refactor — with its reviewing model **pinned in the agent's own
    definition** so dispatch can't silently downgrade to a cheaper default. Have it emit findings as a
-   machine-parseable list (`file:line`, verbatim quote, one-line why, one-line minimal fix) with no
+   structured list (`file:line`, verbatim quote, one-line why, one-line minimal fix) with no
    prose, charge it to *flag every candidate and let the parent verify*, and require it to **return an
    explicit empty result rather than narrating "looks fine."** Pair the structured per-concern
    detectors with one free-form "catch what the others miss" pass whose categories are deliberately
@@ -84,6 +84,6 @@ typecheck, and do not propose a commit until the user has signed off on the mess
 - Cross-reference siblings: tell the user to start the app with [run-it](run-it.md) if it isn't up
   before live verification; follows the implementation that [start-work](start-work.md) set up.
 - Keep push as a deliberate, separate action so "committed" never implies "pushed."
-- This is the *real* commit path and never bypasses hooks. The only sanctioned hook-bypass is the
+- This is the *real* commit path and never bypasses hooks. The only permitted hook-bypass is the
   disposable, never-pushed WIP checkpoint in [suspend-unsuspend](suspend-unsuspend.md); don't conflate
   the two.

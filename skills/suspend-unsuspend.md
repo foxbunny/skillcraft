@@ -21,7 +21,7 @@ carry git's literals across verbatim.
 
 **Top guardrail (both halves): a WIP checkpoint is local and disposable — never push it, never treat
 it as a real commit, and only ever unwind it with a *soft*, WIP-gated reset.** This is the library's
-one *sanctioned* hook-bypass (contrast the real, gated commit path in [commit-gate](commit-gate.md)):
+one *permitted* hook-bypass (contrast the real, gated commit path in [commit-gate](commit-gate.md)):
 `/suspend` skips hook checks precisely because the checkpoint is a parking spot the user will reverse,
 not a change entering history.
 
@@ -78,14 +78,14 @@ resume.
   faking a checkpoint or resetting anyway; never imply a WIP commit is real, reviewed, or pushed.
 - **Confirm before irreversible / outward actions** — the pair stays reversible and local by design;
   the guardrail is "never push," not "ask before checkpointing."
-- **Respect standing project constraints, with the one sanctioned exception** — hooks are bypassed
+- **Respect standing project constraints, with the one permitted exception** — hooks are bypassed
   *only* for this disposable checkpoint, never for a real commit.
 
 ## Notes
 
 - Cross-reference siblings: pairs with [start-work](start-work.md) when switching to a different task;
   `/unsuspend` is the only supported way to unwind a `/suspend` checkpoint.
-- Keep `/suspend` idempotent in spirit: if HEAD is already a WIP checkpoint, note that rather than
+- Keep `/suspend` safe to repeat: if HEAD is already a WIP checkpoint, note that rather than
   stacking a second one — one checkpoint per suspension. `/unsuspend` is a safe no-op (with a clear
   message) on any branch whose tip isn't a WIP checkpoint.
 - A WIP checkpoint must never reach a shared branch or a PR; if the branch is already pushed, warn the

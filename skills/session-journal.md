@@ -2,8 +2,8 @@
 
 **Archetype for a `/diary` command.** Use this to author a skill whose deliverable is **a dated,
 append-only entry summarizing a working session** — what changed, the decisions and their *why*, the
-immediate next steps, and open questions/risks. The boundary: it records the narrative; it is not a
-process retro (that's [postmortem](postmortem.md)) and not the task backlog (that's
+immediate next steps, and open questions/risks. The boundary: it records what happened; it is not a
+process retrospective (that's [postmortem](postmortem.md)) and not the task backlog (that's
 [task-queue](task-queue.md)).
 
 **Skill vs. rule boundary:** that the journal is **append-only and immutable** is a **rule**; this skill
@@ -12,8 +12,8 @@ performs the **action** of adding one entry while honoring that rule.
 Read the [README](../README.md) for the skeleton, header-wrapping, and principles. Author this skill
 with [authoring-a-skill-suite](authoring-a-skill-suite.md).
 
-**Top guardrail: never rewrite or edit past entries — history is immutable.** Add a new entry; reconcile
-forward.
+**Top guardrail: never rewrite or edit past entries — history is immutable.** Add a new entry; record
+any corrections as new entries.
 
 ## Generalized steps (the reusable body)
 
