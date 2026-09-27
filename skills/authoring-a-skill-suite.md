@@ -34,6 +34,11 @@ review-heavy work add [adversarial-skeptic](adversarial-skeptic.md) (adversarial
 and [walkthrough](walkthrough.md) (explain a change in depth). Add or drop archetypes to fit; the same
 skeleton extends to `/review`, `/verify`, `/deploy`, etc.
 
+For changes that need independent, externally observable before/after evidence, add
+[behavioral-change-evaluation](behavioral-change-evaluation.md). It authors a coordinated
+characterizer, concern-specific evaluator, and deterministic verdict suite rather than folding those
+roles into the implementer's context.
+
 The discovery-heavy archetypes — [open-pr](open-pr.md) and [repo-housekeeping](repo-housekeeping.md)
 especially — are where the **authoring-time discovery** model (see the README) does the most work: infer
 the merge style, PR conventions, tracker linkage, and VCS from the repo, propose them, and bake the
@@ -63,6 +68,9 @@ this is the union of them:
 | Hard constraints / "never do X" (invariants an audit enforces) | instruction files, existing rules, the user |
 | Durable-record conventions (journal, task queue) + their file paths | `docs/`, existing logs, instruction files |
 | Available integrations (tracker / browser / MCP) | the agent's tool list; ask the user |
+| Base/changed resolution, revision startup, and integrity checks | VCS, launch scripts, build tooling, runtime isolation support |
+| Legitimate interfaces, identities, fixtures, observation surfaces, database snapshots, and external contracts | API/UI docs, test setup, operational tooling, integration contracts |
+| Goal sources, evaluator selection, verdict rules, and evidence retention | task/architecture docs, standing rules, ownership maps, compliance policy |
 
 When a fact can't be derived, **ask**.
 

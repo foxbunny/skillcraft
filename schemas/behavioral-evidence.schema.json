@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skillcraft.local/schemas/behavioral-evidence.schema.json",
+  "title": "Behavioral change evidence inventory",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "specimens", "integrity", "items"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "specimens": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["base", "changed"],
+      "properties": {
+        "base": { "$ref": "#/$defs/specimen" },
+        "changed": { "$ref": "#/$defs/specimen" }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["before", "after"],
+      "properties": {
+        "before": { "$ref": "#/$defs/integrityChecks" },
+        "after": { "$ref": "#/$defs/integrityChecks" }
+      }
+    },
+    "hypotheses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "candidate_consequence", "source_basis", "probe_plan"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "candidate_consequence": { "type": "string", "minLength": 1 },
+          "source_basis": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+          "probe_plan": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 }
+        }
+      }
+    },
+    "items": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidenceItem" }
+    }
+  },
+  "$defs": {
+    "specimen": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revision", "tree", "runtime_identity"],
+      "properties": {
+        "revision": { "type": "string", "minLength": 1 },
+        "tree": { "type": "string", "minLength": 1 },
+        "runtime_identity": { "type": "string", "minLength": 1 }
+      }
+    },
+    "integrityCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["specimen", "check", "result", "raw_reference"],
+      "properties": {
+        "specimen": { "enum": ["base", "changed"] },
+        "check": { "type": "string", "minLength": 1 },
+        "result": { "enum": ["pass", "fail", "indeterminate"] },
+        "raw_reference": { "type": "string", "minLength": 1 }
+      }
+    },
+    "integrityChecks": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/integrityCheck" },
+      "minItems": 2,
+      "allOf": [
+        {
+          "contains": {
+            "type": "object",
+            "properties": { "specimen": { "const": "base" } },
+            "required": ["specimen"]
+          }
+        },
+        {
+          "contains": {
+            "type": "object",
+            "properties": { "specimen": { "const": "changed" } },
+            "required": ["specimen"]
+          }
+        }
+      ]
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["summary", "raw_references"],
+      "properties": {
+        "summary": { "type": "string", "minLength": 1 },
+        "raw_references": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1
+        }
+      }
+    },
+    "mockInteraction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["boundary", "application_request", "mock_response", "contract_basis", "resulting_observation"],
+      "properties": {
+        "boundary": { "type": "string", "minLength": 1 },
+        "application_request": { "type": "string", "minLength": 1 },
+        "mock_response": { "type": "string", "minLength": 1 },
+        "contract_basis": { "type": "string", "minLength": 1 },
+        "resulting_observation": { "type": "string", "minLength": 1 }
+      }
+    },
+    "evidenceItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "candidate_consequence",
+        "trigger_and_conditions",
+        "base_observation",
+        "changed_observation",
+        "classification",
+        "raw_evidence_references",
+        "reproduction_procedure",
+        "observation_boundary",
+        "limitations",
+        "untested_conditions",
+        "mock_interactions"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "candidate_consequence": { "type": "string", "minLength": 1 },
+        "trigger_and_conditions": { "type": "string", "minLength": 1 },
+        "base_observation": { "$ref": "#/$defs/observation" },
+        "changed_observation": { "$ref": "#/$defs/observation" },
+        "classification": { "enum": ["Changed", "Unchanged", "Indeterminate"] },
+        "direction": { "enum": ["Enabled", "Disabled", "Altered"] },
+        "raw_evidence_references": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1
+        },
+        "reproduction_procedure": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1
+        },
+        "observation_boundary": { "type": "string", "minLength": 1 },
+        "limitations": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "untested_conditions": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "mock_interactions": { "type": "array", "items": { "$ref": "#/$defs/mockInteraction" } }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "classification": { "const": "Changed" } }, "required": ["classification"] },
+          "then": { "required": ["direction"] },
+          "else": { "not": { "required": ["direction"] } }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skillcraft.local/schemas/behavioral-evaluation-config.schema.json",
+  "title": "Project adapter for behavioral change evaluation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "revisions",
+    "start_revision",
+    "interfaces",
+    "test_identities",
+    "fixtures",
+    "observation_surfaces",
+    "database_snapshots",
+    "external_boundaries",
+    "goal_sources",
+    "evaluator_selection",
+    "verdict_policy",
+    "artifacts",
+    "integrity_checks"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "revisions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["determine_base", "determine_changed"],
+      "properties": {
+        "determine_base": { "$ref": "#/$defs/command" },
+        "determine_changed": { "$ref": "#/$defs/command" }
+      }
+    },
+    "start_revision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["procedure", "readiness_check", "stop_procedure", "mutable_state_location"],
+      "properties": {
+        "procedure": { "$ref": "#/$defs/steps" },
+        "readiness_check": { "$ref": "#/$defs/steps" },
+        "stop_procedure": { "$ref": "#/$defs/steps" },
+        "mutable_state_location": { "type": "string", "minLength": 1 }
+      }
+    },
+    "interfaces": { "type": "array", "items": { "$ref": "#/$defs/interface" }, "minItems": 1 },
+    "test_identities": { "type": "array", "items": { "$ref": "#/$defs/namedProcedure" } },
+    "fixtures": { "type": "array", "items": { "$ref": "#/$defs/namedProcedure" } },
+    "observation_surfaces": { "type": "array", "items": { "$ref": "#/$defs/namedProcedure" }, "minItems": 1 },
+    "database_snapshots": { "type": "array", "items": { "$ref": "#/$defs/namedProcedure" } },
+    "external_boundaries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "capture_procedure", "contract_sources"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "capture_procedure": { "$ref": "#/$defs/steps" },
+          "contract_sources": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 }
+        }
+      }
+    },
+    "goal_sources": { "type": "array", "items": { "$ref": "#/$defs/goalSource" }, "minItems": 1 },
+    "evaluator_selection": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["concern", "select_when", "brief_source"],
+        "properties": {
+          "concern": { "type": "string", "minLength": 1 },
+          "select_when": { "type": "string", "minLength": 1 },
+          "brief_source": { "type": "string", "minLength": 1 }
+        }
+      },
+      "minItems": 1
+    },
+    "verdict_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required_criterion_ids", "hard_invariant_ids", "aggregator"],
+      "properties": {
+        "required_criterion_ids": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1, "uniqueItems": true },
+        "hard_invariant_ids": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "aggregator": { "type": "string", "minLength": 1 }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["location", "naming", "retention", "access_controls"],
+      "properties": {
+        "location": { "type": "string", "minLength": 1 },
+        "naming": { "type": "string", "minLength": 1 },
+        "retention": { "type": "string", "minLength": 1 },
+        "access_controls": { "type": "string", "minLength": 1 }
+      }
+    },
+    "integrity_checks": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/namedProcedure" },
+      "minItems": 1
+    }
+  },
+  "$defs": {
+    "command": { "type": "string", "minLength": 1 },
+    "steps": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 },
+    "namedProcedure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "procedure"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "procedure": { "$ref": "#/$defs/steps" }
+      }
+    },
+    "interface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "kind", "procedure"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["user", "client", "admin"] },
+        "procedure": { "$ref": "#/$defs/steps" }
+      }
+    },
+    "goalSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "categories", "authority", "retrieval_procedure"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "categories": {
+          "type": "array",
+          "items": {
+            "enum": ["task_objective", "acceptance_criterion", "hard_invariant", "architectural_decision", "product_or_quality_goal", "preference", "historical_context_or_known_failure"]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "authority": { "type": "string", "minLength": 1 },
+        "retrieval_procedure": { "$ref": "#/$defs/steps" }
+      }
+    }
+  }
+}

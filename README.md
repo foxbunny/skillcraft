@@ -220,7 +220,7 @@ relevant ones into every skill you author.**
 
 Start with [`skills/authoring-a-skill-suite.md`](skills/authoring-a-skill-suite.md) — it is the
 entry-point meta-skill that orchestrates the others: identify the target agent, choose archetypes,
-run discovery, and emit concrete skills. The remaining thirteen are the reusable command archetypes;
+run discovery, and emit concrete skills. The remaining fourteen are the reusable command archetypes;
 most dev repos want some subset.
 
 | Meta-skill | Deliverable it teaches an agent to build |
@@ -239,6 +239,7 @@ most dev repos want some subset.
 | [repo-housekeeping](skills/repo-housekeeping.md) | A `/housekeeping` command: delete content-merged branches, flag stale ones, archive shipped backlog items — VCS detected at authoring time. |
 | [adversarial-skeptic](skills/adversarial-skeptic.md) | A `/skeptic` command: independent minimal-context subagents that attack a change *or* a decision and end on the refinements that fix it. Judge-only. |
 | [walkthrough](skills/walkthrough.md) | A `/walkthrough` command: explain a change or code in depth — flow, why, before/after, history, direction. Explain-only, no verdicts. |
+| [behavioral-change-evaluation](skills/behavioral-change-evaluation.md) | A `/characterize-change` → `/evaluate-change` → `/behavioral-verdict` suite: compare immutable revisions, preserve evidence, assess it in fresh contexts, and apply a non-voting gate. |
 
 The same skeleton and principles extend to `/review`, `/verify`, `/deploy`, and other commands — only
 the steps change.

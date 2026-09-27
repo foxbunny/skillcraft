@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skillcraft.local/schemas/behavioral-evaluation.schema.json",
+  "title": "Behavioral change evaluation packet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "policy", "goal_sources", "evaluators", "criteria", "hard_invariants", "trade_offs"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required_criterion_ids", "hard_invariant_ids"],
+      "properties": {
+        "required_criterion_ids": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "hard_invariant_ids": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      }
+    },
+    "goal_sources": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/goalSource" },
+      "minItems": 1
+    },
+    "evaluators": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evaluator" },
+      "minItems": 1
+    },
+    "criteria": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/criterionAssessment" }
+    },
+    "hard_invariants": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/invariantAssessment" }
+    },
+    "trade_offs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/tradeOff" }
+    }
+  },
+  "$defs": {
+    "referenceList": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "goalSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "category", "authority", "provenance", "retrieved_at", "content_reference", "stance"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "category": {
+          "enum": ["task_objective", "acceptance_criterion", "hard_invariant", "architectural_decision", "product_or_quality_goal", "preference", "historical_context_or_known_failure"]
+        },
+        "authority": { "type": "string", "minLength": 1 },
+        "provenance": { "type": "string", "minLength": 1 },
+        "retrieved_at": { "type": "string", "format": "date-time" },
+        "content_reference": { "type": "string", "minLength": 1 },
+        "stance": { "enum": ["supporting", "conflicting", "neutral"] }
+      }
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "relationship", "demonstrated_observation", "interpretation", "evidence_ids", "goal_source_ids"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "relationship": { "enum": ["advances", "preserves", "undermines", "trade_off", "unrelated", "indeterminate"] },
+        "demonstrated_observation": { "type": "string", "minLength": 1 },
+        "interpretation": { "type": "string", "minLength": 1 },
+        "evidence_ids": { "$ref": "#/$defs/referenceList" },
+        "goal_source_ids": { "$ref": "#/$defs/referenceList" }
+      }
+    },
+    "evaluator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "concerns", "findings"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "concerns": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 },
+        "findings": { "type": "array", "items": { "$ref": "#/$defs/finding" } }
+      }
+    },
+    "criterionAssessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["criterion_id", "evaluator_id", "status", "evidence_ids", "goal_source_ids", "interpretation"],
+      "properties": {
+        "criterion_id": { "type": "string", "minLength": 1 },
+        "evaluator_id": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["met", "unmet", "insufficient_evidence"] },
+        "evidence_ids": { "$ref": "#/$defs/referenceList" },
+        "goal_source_ids": { "$ref": "#/$defs/referenceList" },
+        "interpretation": { "type": "string", "minLength": 1 }
+      }
+    },
+    "invariantAssessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["invariant_id", "evaluator_id", "status", "evidence_ids", "goal_source_ids", "interpretation"],
+      "properties": {
+        "invariant_id": { "type": "string", "minLength": 1 },
+        "evaluator_id": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["preserved", "violated", "indeterminate"] },
+        "evidence_ids": { "$ref": "#/$defs/referenceList" },
+        "goal_source_ids": { "$ref": "#/$defs/referenceList" },
+        "interpretation": { "type": "string", "minLength": 1 }
+      }
+    },
+    "tradeOff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "summary", "evidence_ids", "goal_source_ids", "human_judgment_needed"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string", "minLength": 1 },
+        "evidence_ids": { "$ref": "#/$defs/referenceList" },
+        "goal_source_ids": { "$ref": "#/$defs/referenceList" },
+        "human_judgment_needed": { "const": true }
+      }
+    }
+  }
+}
