@@ -2,9 +2,9 @@
 
 **This is the entry-point meta-skill.** It tells an AI agent how to turn the archetypes in this
 library into a concrete, project-specific skill suite for whichever target agent the project uses. It
-produces *skill files*, not application code.
+produces *skills and their companion customization files*, not application code.
 
-Read the [README](../README.md) first for the two primitives, the activation modes, the portable
+Read the [README](../README.md) first for the three primitives, the activation modes, the portable
 skeleton, the agent-mapping table, and the universal design principles. This document is the
 *procedure* that consumes all of those.
 
@@ -14,10 +14,11 @@ than a gap. When a fact can't be derived from the repo, **ask the user** before 
 ## 1. Identify the target agent(s)
 
 Look for existing customization directories to infer the agent in play: `.claude/`, `.cursor/`,
-`.github/`, `.windsurf/`, `.gemini/`, `AGENTS.md`, `.roomodes`. If none exist or several do, **ask the
-user** which agent(s) to target. This picks the row(s) in the README's agent-mapping table. If
-multiple agents are in play, write each skill body once and wrap a header per agent — the body prose
-is reusable verbatim.
+`.github/`, `.devin/`, `.windsurf/`, `.gemini/`, `.codex/`, `.cline/`, `.clinerules/`, `.roo/`,
+`AGENTS.md`, `.roomodes`. Inspect existing rule, skill, agent/mode, permission, policy, and hook files.
+If none exist or several do, **ask the user** which harness and client surface to target. This picks
+the row(s) in the README's mapping tables. If multiple agents are in play, reuse portable bodies but
+emit and validate each harness's own metadata and inheritance semantics.
 
 ## 2. Choose the skills
 
@@ -46,8 +47,11 @@ the merge style, PR conventions, tracker linkage, and VCS from the repo, propose
 
 Before adopting any pattern, run the **action vs. standard test** (see the README): if the pattern
 bundles a *standard* with an *action* (audit an invariant, record a metric, reconcile a queue), the
-action becomes the skill and the standard goes into standing context as a rule the skill references —
-this library only authors the skills.
+action becomes the skill and the standard goes into standing context as a rule the skill references.
+Then run the **persona test**: add a persona only when a stable specialist role, fresh context,
+distinct tool surface, or explicit handoff materially improves the workflow. Apply
+[authoring-rules-and-agent-personas](authoring-rules-and-agent-personas.md) whenever the suite emits
+rules or personas.
 
 ## 3. Run the discovery pass
 
@@ -66,6 +70,9 @@ this is the union of them:
 | Issue tracker + id format (and whether the project tracks at all) | branch names, commit messages, PR templates, the user |
 | Editing-surface rules (fair-game vs. off-limits dirs) | instruction files, code owners, existing rules |
 | Hard constraints / "never do X" (invariants an audit enforces) | instruction files, existing rules, the user |
+| Rule hierarchy, activation, precedence, imports, and size limits | existing customization files, installed harness docs/version |
+| Persona/mode definitions, delegation triggers, and context inheritance | agent/mode directories, harness inventory/doctor commands, installed harness docs/version |
+| Enforced controls for tools, commands, sandboxing, approvals, and hooks | harness policy/settings files and organization policy; never infer from prompt prose |
 | Durable-record conventions (journal, task queue) + their file paths | `docs/`, existing logs, instruction files |
 | Available integrations (tracker / browser / MCP) | the agent's tool list; ask the user |
 | Base/changed resolution, revision startup, and integrity checks | VCS, launch scripts, build tooling, runtime isolation support |
@@ -80,11 +87,13 @@ Take the archetype body from its meta-skill document, replace every placeholder 
 fact, inject the relevant universal design principles, and wrap the README agent-mapping header for the
 target. Add helper scripts for any long-running or deterministic step (a launcher especially).
 
-## 5. Put invariants in standing context
+## 5. Author companion rules and personas
 
 Move the repo's hard constraints into the agent's always-on file (`CLAUDE.md` / `AGENTS.md` / etc.) so
 every skill inherits them instead of each skill re-stating them. Skills then reference the standing
-context.
+context. Use [authoring-rules-and-agent-personas](authoring-rules-and-agent-personas.md) to scope
+conditional rules, keep enforcement in real policy surfaces, define only justified specialist
+personas, and wire their instruction inheritance and handoffs explicitly.
 
 ## 6. Cross-link the suite
 
@@ -97,11 +106,17 @@ with the run-it launcher if it isn't up). The suite is a workflow, not isolated 
 - description stands alone and carries concrete trigger phrases.
 - body has the top guardrail + numbered ordered steps + a `## Notes` section.
 - every command, path, and script the skill references **actually exists in the repo**.
+- every rule has an authoritative source, scope, activation, and understood precedence.
+- every persona has a focused trigger, boundary, input/output contract, least-privilege capability
+  set, and verified rule inheritance.
+- syntax validity is not treated as runtime validity: test discovery and one representative
+  invocation from a fresh session when the harness is available.
 
 ## 8. Hand back
 
-List what was created, note where each file lives and whether it's **local-only vs. team-shared** (and
-what that implies), and suggest the user try one.
+List what was created, note where each file lives and whether it's **local-only vs. team-shared**,
+state which controls are guidance versus enforced policy, report any unverified inheritance or
+delegation behavior, and suggest the user try one.
 
 ## Notes
 

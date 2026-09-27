@@ -11,7 +11,7 @@ project should:
 1. Read this README for the universal model and design principles that apply to every skill.
 2. Pick the relevant meta-skill(s) from [`skills/`](skills/).
 3. Run the discovery pass against the project, fill the archetype's placeholders with real facts, and
-   emit a concrete skill file in the target agent's format.
+   emit concrete skills plus any companion rules and agent personas in the target harness's format.
 
 The point of the library is that the **structure and principles are portable; the commands, paths,
 conventions, and header syntax are not** — those get re-derived per project and per agent, every
@@ -21,11 +21,11 @@ time. Never carry one repo's or one agent's specifics into another.
 
 ## Why "meta"?
 
-Different agents call reusable-customization artifacts different things — Claude Code "Agent Skills",
-Cursor "Rules & Commands", Copilot "instructions & prompt files", Windsurf "Rules & Workflows",
-Gemini CLI "custom commands", Codex "AGENTS.md & prompts", Roo Code "modes". They are one idea with a
-shared structure. A meta-skill captures that shared structure once, so an agent can map it onto
-whichever surface the current project targets.
+Different agents call reusable-customization artifacts different things — Claude Code "Agent Skills"
+and subagents, Cursor "Rules, Commands & Subagents", Copilot "instructions, prompt files & custom
+agents", Windsurf "Rules & Workflows", Gemini CLI "custom commands & subagents", Codex "AGENTS.md,
+skills & agents", and Roo Code "modes". They share a small set of concepts. A meta-skill captures
+that structure once, so an agent can map it onto whichever surface the current project targets.
 
 The body prose of a skill is reusable verbatim across agents; only the header and argument syntax
 change. So the meta-skills here describe the **portable body** and tell the authoring agent how to
@@ -64,42 +64,47 @@ answers*.
 
 ---
 
-## The universal model: two primitives
+## The universal model: three primitives
 
-Reusable agent customization reduces to **two primitives**. Decide which one a skill is before
-writing it — they activate differently:
+Reusable agent customization reduces to **three primitives**. Classify a customization before
+writing it because each primitive loads and composes differently:
 
 | Primitive | What it is | When it loads |
 |---|---|---|
 | **Standing context** ("rules" / "instructions" / memory) | Always-relevant background the agent should respect on every (or path-matched) request. | Auto-injected — always-on, or attached when a file glob matches. |
 | **Invokable command** ("skill" / "command" / "workflow" / "prompt") | A task template the user (or the model) fires deliberately to *do* a multi-step job. | On demand — explicit `/name`, or model-decided from its description. |
+| **Agent persona** ("custom agent" / "subagent" / "mode") | A named specialist with a focused role and, where supported, an independent context and constrained tools/runtime. | Selected by the user, delegated by a parent, or inferred from its description. |
 
-Every meta-skill in [`skills/`](skills/) is an **invokable command**. Standing-context files (a
-`CLAUDE.md` / `AGENTS.md` / `copilot-instructions.md`) are where a project's *constants and hard
-constraints* live, which the commands then reference. A good suite uses both: thin always-on rules
-for invariants, fat on-demand commands for workflows.
+Most meta-skills in [`skills/`](skills/) author an **invokable command**. Standing-context files (a
+`CLAUDE.md` / `AGENTS.md` / `copilot-instructions.md`) hold project constants and hard constraints;
+personas hold role-specific identity, capability, and handoff contracts. A good suite uses thin
+rules for shared invariants, substantial on-demand commands for workflows, and only a few personas
+where context isolation or specialization materially helps.
 
-**Action vs. standard — the test to run before authoring anything.** Many useful patterns bundle a
-*standard* with an *action over it*: audit an invariant, record a top-priority metric, reconcile a
-backlog, append an immutable log. The **action is the skill** (this library); the **standard it
-enforces is a rule** that belongs in standing context. Keep the standard in one place and have the
-skill *reference* it — never re-author the rule inside the skill. So "no allocation on the audio
-thread" is a rule; the `/audit` that checks the diff against it is a skill. "Latency is the top
-priority and regressions block release" is a rule; the `/latency-log` that records one measurement is a
-skill. This library only covers the skills.
+**Action / standard / persona — the test to run before authoring anything.** The **action is a
+skill**, the **standard it applies is a rule**, and the **specialist executing or independently
+checking it may be a persona**. Keep each shared standard in one authoritative rule and have skills
+and personas reference or inherit it. So "no allocation on the audio thread" is a rule; `/audit` is
+the skill that checks it; `realtime-safety-reviewer` may be a read-only persona with a fresh context.
+Do not create a persona merely to hold a long procedure.
 
-### The activation modes
+**Guidance is not enforcement.** Rules and persona prompts shape model behavior but do not grant or
+revoke authority. Put tool permissions, command policy, sandboxing, approvals, and deterministic
+checks in the harness's enforced configuration. Notably, Codex `.rules` files are command-execution
+policy; Codex behavioral project guidance belongs in `AGENTS.md`.
 
-Every agent expresses some subset of four activation modes. Pick one per skill:
+### Rule and skill activation modes
+
+Every harness expresses some subset of four activation modes. Pick one per rule or skill:
 
 1. **Always-on** — injected into every request.
 2. **Glob/path-attached** — injected when an in-context file matches a pattern.
 3. **Model-decided** — the agent reads the skill's *description* and chooses whether to load it.
 4. **Manual** — only when the user explicitly invokes it (`/name` or `@name`).
 
-This is why **the `description` field is the most important line you write**: in modes 3 and 4
-it is both the trigger signal and the menu text. Lead with the outcome and enumerate concrete trigger
-phrases.
+This is why **the `description` field is the most important line you write**: in modes 3 and 4 it is
+both the trigger signal and the menu text. Persona descriptions also drive delegation in many
+harnesses. Lead with the outcome and concrete trigger conditions.
 
 ---
 
@@ -146,14 +151,34 @@ move; sources at the bottom.)
 | **Claude Code** | `.claude/skills/<name>/SKILL.md` (a *directory*, can bundle scripts) | `CLAUDE.md`; `.claude/` | YAML frontmatter: `name`, `description`, `when_to_use`, `allowed-tools`, `model`, `paths`, `user-invocable`, `disable-model-invocation` | `/name`; or model-decided from `description` |
 | **Cursor** | `.cursor/commands/<name>.md` (plain MD) | `.cursor/rules/*.mdc` (`description`, `globs`, `alwaysApply`); `AGENTS.md` | Commands: no frontmatter. Rules: YAML frontmatter | Commands: `/name`. Rules: Always / Auto-glob / Agent-requested / `@name` |
 | **GitHub Copilot** | `.github/prompts/<name>.prompt.md` (`description`, `mode`, `model`, `tools`) | `.github/copilot-instructions.md`; `.github/instructions/*.instructions.md` (`applyTo` glob) | YAML frontmatter | Prompts: `/name`. Instructions: auto-injected |
-| **Windsurf** | `.windsurf/workflows/<name>.md` (title + description + numbered steps) | `.windsurf/rules/*.md` (Activation Mode) | Markdown; rules carry activation mode | Workflows: `/name`. Rules: Manual `@` / Always / Model / Glob |
+| **Windsurf / Devin Desktop** | `.devin/workflows/<name>.md` (preferred; legacy `.windsurf/workflows/`) | `.devin/rules/*.md` (preferred; legacy `.windsurf/rules/`) | Markdown; rules carry activation mode | Cascade workflows: manual `/name`. Rules: Manual `@` / Always / Model / Glob |
 | **Gemini CLI** | `.gemini/commands/<name>.toml` (subdirs → `/ns:name`) | `GEMINI.md` | **TOML**: `prompt` (req), `description`. Templating `{{args}}`, `!{cmd}`, `@{path}` | `/name` |
-| **OpenAI Codex** | `~/.codex/prompts/<name>.md` (home, not repo-shared) — *Skills now preferred* | `AGENTS.md` (hierarchical, root→leaf override) | Prompts: `description`, `argument-hint`, `$1`–`$9`, `$NAME` | `/prompts:name`. AGENTS.md auto-loaded |
+| **OpenAI Codex** | `.agents/skills/<name>/SKILL.md` (a *directory*, can bundle scripts); `$HOME/.agents/skills` for user-global. Distributed via plugins. Custom prompts are deprecated. | `AGENTS.md` (hierarchical, root→leaf override) | YAML frontmatter: `name`, `description`; optional `agents/openai.yaml` for MCP deps | `$name` when enabled; model-decided from `description`; `/skills` to browse |
 | **Cline / Roo** | Cline: `.clinerules/workflows/<name>.md`. Roo: a **mode** in `.roomodes` (rebinds role + tool perms) | Cline `.clinerules/*.md` (`paths` glob). Roo `.roo/rules*/` | Cline: optional YAML (`paths`). Roo: YAML/JSON mode (`slug`, `roleDefinition`, `groups`, `whenToUse`) | Cline workflow: `/name`. Roo mode: menu or `whenToUse` auto-select |
 
-**Cross-agent fallback:** `AGENTS.md` is read by Codex, Cursor, and Copilot; `CLAUDE.md` by Claude
-(and Copilot for compat). For standing context that must work everywhere, put invariants in
-`AGENTS.md` and let each agent's native rule file `@`-reference or duplicate the essentials.
+### Persona mapping and inheritance
+
+| Harness | Project persona surface | How the harness uses it |
+|---|---|---|
+| **Claude Code** | `.claude/agents/*.md` | Selected or delegated by `description`; custom subagents normally load project instructions unless configured not to. |
+| **Cursor** | `.cursor/agents/*.md` | Delegated automatically or explicitly into a separate context; compatibility agent directories are also supported. |
+| **GitHub Copilot** | `.github/agents/*.md` | Selected as the active agent or delegated as a subagent. Copilot CLI subagents need `include-custom-instructions: true` to receive repository instructions. |
+| **Windsurf / Devin Desktop** | No repository custom-persona surface established in the reviewed docs | Use supported rules, skills, and workflows; verify current product support before inventing a persona artifact. |
+| **Gemini CLI** | `.gemini/agents/*.md` | Exposed to the main agent for automatic delegation or explicit `@name` invocation in an independent context. |
+| **OpenAI Codex** | `.codex/agents/*.toml` | Selected/delegated specialist; omitted settings inherit while the parent sandbox and approval policy remain authoritative. |
+| **Cline** | No repository custom-persona surface established in the reviewed docs | Use rules and workflows, or state that a separate agent runtime is required. |
+| **Roo Code** | `.roomodes` | Selects a role/tool configuration; Orchestrator can delegate a new task, but merely switching mode is not fresh-context isolation. |
+
+The concise authoring procedure is
+[authoring-rules-and-agent-personas](skills/authoring-rules-and-agent-personas.md). The progressive
+disclosure reference, including load order, inheritance traps, and official sources, is
+[harness-rules-and-agent-personas](references/harness-rules-and-agent-personas.md).
+
+**Cross-agent fallback:** `AGENTS.md` is read by Codex, Cursor, Copilot, and recent Claude Code when
+no `CLAUDE.md` takes precedence; `CLAUDE.md` is also recognized by several harnesses. For standing
+context that must work across targets, choose one canonical source, then use each harness's native
+import or compatibility mechanism and verify the effective context. Do not silently maintain
+divergent copies of hard invariants.
 
 **Portability caveat:** invokable *commands* do **not** share a format across agents — you maintain N
 copies (one per target), differing only in the header and argument syntax. The **body prose is
@@ -198,9 +223,10 @@ relevant ones into every skill you author.**
   entries** — they add new ones and reconcile in new entries. History is immutable; the trail is the value.
 - **Right-home mapping for durable fixes.** When a skill emits guidance/rules, map each fix to the
   **lightest durable mechanism** that removes the friction, and to where it belongs: this skill's body
-  / a standing-context rule (`CLAUDE.md`/`AGENTS.md`) / a script / a settings hook / personal memory /
-  a doc update / a permission allowlist. Flag tracked-vs-ignored so "this is now shared" is never a
-  false claim, and don't over-engineer — pick the smallest mechanism that lasts.
+  / a standing-context rule (`CLAUDE.md`/`AGENTS.md`) / an agent persona / a script / a settings hook /
+  personal memory / a doc update / a permission allowlist. A persona is appropriate only when a
+  distinct role, context, tool surface, or handoff is the durable mechanism. Flag tracked-vs-ignored
+  so "this is now shared" is never a false claim, and don't over-engineer.
 - **Cross-reference siblings.** Skills point at each other by command name ("if the server isn't up,
   start it with `/<launcher>`"). The suite is a workflow, not isolated tools.
 - **Respect standing project constraints.** Echo the repo's hard rules (env setup, read-only infra,
@@ -220,12 +246,13 @@ relevant ones into every skill you author.**
 
 Start with [`skills/authoring-a-skill-suite.md`](skills/authoring-a-skill-suite.md) — it is the
 entry-point meta-skill that orchestrates the others: identify the target agent, choose archetypes,
-run discovery, and emit concrete skills. The remaining fourteen are the reusable command archetypes;
-most dev repos want some subset.
+run discovery, and emit concrete skills plus companion rules/personas. The remaining fifteen are
+reusable archetypes; most dev repos want some subset.
 
 | Meta-skill | Deliverable it teaches an agent to build |
 |---|---|
 | [authoring-a-skill-suite](skills/authoring-a-skill-suite.md) | The procedure for turning these archetypes into a concrete, project-specific skill suite. |
+| [authoring-rules-and-agent-personas](skills/authoring-rules-and-agent-personas.md) | The procedure for separating workflows, standing guidance, enforced controls, and specialist personas, then emitting and validating harness-native artifacts. |
 | [start-work](skills/start-work.md) | A `/prep` command: a ready workspace + agreed plan, no code written yet. |
 | [capture-repro](skills/capture-repro.md) | A `/capture-repro` command: a failing test or captured measurement that proves a bug before the fix. |
 | [run-it](skills/run-it.md) | `/up` / `/up-full` launchers: the app or full stack running as a tracked background task. |
@@ -264,7 +291,8 @@ the steps change.
 - Cursor Rules & Commands — https://cursor.com/docs/context/rules
 - GitHub Copilot custom instructions & prompt files — https://code.visualstudio.com/docs/agent-customization/custom-instructions
 - Windsurf Rules & Workflows — https://docs.windsurf.com/windsurf/cascade/workflows
-- OpenAI Codex AGENTS.md & prompts — https://developers.openai.com/codex/guides/agents-md , https://developers.openai.com/codex/custom-prompts
+- OpenAI Codex AGENTS.md, skills & plugins — https://developers.openai.com/codex/guides/agents-md , https://developers.openai.com/codex/skills , https://developers.openai.com/codex/plugins/build
+- OpenAI Codex subagents & command rules — https://learn.chatgpt.com/docs/agent-configuration/subagents , https://learn.chatgpt.com/docs/agent-configuration/rules
 - Gemini CLI custom commands — https://geminicli.com/docs/cli/custom-commands/
 - Cline rules — https://docs.cline.bot/customization/cline-rules ; Roo Code custom modes — https://roocodeinc.github.io/Roo-Code/features/custom-modes
 - AGENTS.md open standard — https://agents.md
