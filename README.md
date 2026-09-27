@@ -133,8 +133,9 @@ Rules of thumb that hold regardless of agent:
 - **Filename / directory name → the command name.** Keep them in sync with `name`.
 - **Body loads only on invocation** in most agents, so it can be long and detailed; the description is
   what's cheap and always-resident, so it must stand alone.
-- **Argument placeholders** exist almost everywhere but spelled differently: `$ARGUMENTS` / `$1`
-  (Claude/Codex), `{{args}}` (Gemini), positional `$1`–`$9` (Codex). Use the target's form.
+- **Argument placeholders** exist in most command formats but are spelled differently: `$ARGUMENTS` /
+  `$1` (Claude), `{{args}}` (Gemini). Codex skills take arguments as plain language instead. Use the
+  target's form.
 - **Bundle helper scripts** for anything deterministic or long-running (e.g. launching a server) so
   the model runs a script instead of improvising. Claude skills are *directories* and can ship scripts
   alongside `SKILL.md`; single-file agents reference a script in the repo instead.
